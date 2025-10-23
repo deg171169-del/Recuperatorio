@@ -33,4 +33,24 @@ router.get('/:email', async (req, res) => {
   }
 });
 
+
+
+router.delete('/:cardNumber', async (req, res) => {
+  try {
+    const { cardNumber } = req.params;
+    const cards = await readCards();
+
+    const newCards = cards.filter(card => card.cardNumber !== cardNumber);
+    if (cards.length === newCards.length) {
+      return res.status(404).send('cardNumber not found');
+    }
+
+    await writeCards(newCards);
+    res.status(200).send(`Tarjeta ${cardNumber} delete`);
+  } catch (error) {
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+
 module.exports = router;
